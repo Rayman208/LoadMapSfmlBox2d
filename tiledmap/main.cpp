@@ -1,6 +1,8 @@
 #include "Level.h"
 #include <Box2D\Box2D.h>
 
+#include "ContactListener.h"
+
 const float PtM = 0.04f;
 const float MtP = 25.0f;
 
@@ -19,10 +21,12 @@ b2Body* CreateSquareBody(b2World &world, float x, float y, float w, float h, cha
 	fixtureDef.shape = &polygonShape;
 	fixtureDef.density = 1.0f;
 //	fixtureDef.friction = 0.7f;
+	fixtureDef.userData = userData;
 
 	b2Body *body = world.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
 	body->SetUserData(userData);
+
 
 	return body;
 }
@@ -52,6 +56,9 @@ void main()
 	b2Vec2 gravity(0.0f, 9.8f);
 	b2World world(gravity);
 
+	ContactListener m_ContactListener(&world);
+	world.SetContactListener(&m_ContactListener);
+
 	for (int i = 0; i < lvl.GetObjectsCount(); i++)
 	{
 		Object temp = lvl.GetObjectByIndex(i);
@@ -59,14 +66,14 @@ void main()
 		CreateSquareBody(world, 
 			temp.x, temp.y, 
 			temp.width, temp.height, 
-			(char*)temp.name.c_str(),
+			/*(char*)temp.name.c_str()*/"solid",
 			b2BodyType::b2_staticBody);
 	}
 
 	b2Body *playerBody = CreateSquareBody(world,
 		lvl.GetPlayer().x, lvl.GetPlayer().y,
 		lvl.GetPlayer().width, lvl.GetPlayer().height,
-		(char*)lvl.GetPlayer().name.c_str(),
+		/*(char*)lvl.GetPlayer().name.c_str()*/"player",
 		b2BodyType::b2_dynamicBody);
 
 	while (window.isOpen())
