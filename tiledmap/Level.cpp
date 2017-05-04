@@ -10,6 +10,12 @@ Level::~Level()
 
 void Level::LoadLevel(string fileName)
 {
+	/*_tiles.clear();
+	Vector2i _levelSize = Vector2i();
+
+	_objects.clear();
+	Object _player = Object();*/
+
 	xml_document doc;
 	doc.load_file("map.tmx");
 
@@ -67,6 +73,25 @@ void Level::LoadLevel(string fileName)
 			_tiles.push_back(temp);
 		}
 	}
+	
+	for (xml_node objectNode : doc.child("map").child("objectgroup").children())
+	{
+		Object temp;
+		temp.name = objectNode.attribute("name").value();
+		temp.x = atoi(objectNode.attribute("x").value());
+		temp.y = atoi(objectNode.attribute("y").value());
+		temp.width = atoi(objectNode.attribute("width").value());
+		temp.height = atoi(objectNode.attribute("height").value());
+
+		if (temp.name == "player") 
+		{
+			_player = temp; 
+		}
+		else
+		{
+			_objects.push_back(temp); 
+		}
+	}
 }
 
 Sprite Level::GetTileByIndex(int index)
@@ -82,4 +107,19 @@ int Level::GetTilesCount()
 Vector2i Level::GetLevelSize()
 {
 	return _levelSize;
+}
+
+Object Level::GetObjectByIndex(int index)
+{
+	return _objects[index];
+}
+
+int Level::GetObjectsCount()
+{
+	return _objects.size();
+}
+
+Object Level::GetPlayer()
+{
+	return _player;
 }

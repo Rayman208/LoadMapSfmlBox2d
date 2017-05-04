@@ -11,11 +11,20 @@ using namespace sf;
 using namespace pugi;
 using namespace std;
 
+struct Object
+{
+	string name;
+	int x, y, width, height;
+};
+
 class Level
 {
 private:
 	vector<Sprite*> _tiles;
 	Vector2i _levelSize;
+
+	vector<Object> _objects;
+	Object _player;
 public:
 	Level();
 	~Level();
@@ -26,5 +35,10 @@ public:
 	int GetTilesCount();
 
 	Vector2i GetLevelSize();
+
+	Object GetObjectByIndex(int index);
+	int GetObjectsCount();
+
+	Object GetPlayer();
 };
 
