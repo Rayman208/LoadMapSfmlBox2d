@@ -1,27 +1,25 @@
 #include "ContactListener.h"
 
 
-ContactListener::ContactListener(b2World * world)
-{
-	_world = world;
-}
-
-ContactListener::~ContactListener()
-{
-}
-
 void ContactListener::BeginContact(b2Contact * aContact)
 {
 	b2Fixture* fixtureA = aContact->GetFixtureA();
 	b2Fixture* fixtureB = aContact->GetFixtureB();
 
-	char* userDataA = (char*)fixtureA->GetBody()->GetUserData();
-	char* userDataB = (char*)fixtureB->GetBody()->GetUserData();
+	string userDataA ((char*)fixtureA->GetBody()->GetUserData());
+	string userDataB ((char*)fixtureB->GetBody()->GetUserData());
 
-	cout << userDataA << endl;
-	cout << userDataB << endl;
+	cout << userDataA.c_str() << endl;
+	cout << userDataB.c_str() << endl;
+
+	if (userDataA == "money")
+	{
+ 		fixtureA->GetBody()->SetUserData("erase");
+	}
+
+	if (userDataB == "money")
+	{
+		fixtureB->GetBody()->SetUserData("erase");
+	}
 }
 
-void ContactListener::EndContact(b2Contact * aContact)
-{
-}
